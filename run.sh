@@ -36,7 +36,7 @@ docker compose up -d
 
 # Ждем готовности всех контейнеров
 echo "⏳ Waiting for containers to start..."
-sleep 30
+sleep 10
 
 # Установка зависимостей
 echo "📦 Installing composer dependencies..."
@@ -122,9 +122,15 @@ docker compose exec app chmod 644 /var/www/public/docs/index.html
 docker compose exec postgres psql -U notify_user -d notifications -c "CREATE DATABASE notifications_test;"
 
 echo ""
-echo "✅ Deployment complete!"
+echo "✅ Установка завершена!"
 echo ""
 echo "Services:"
 echo "  API:      http://localhost:8080"
+echo "  Docs:     http://localhost:8080/docs/index.html"
 echo "  Kafka UI: http://localhost:8081"
 echo "  Connect:  http://localhost:8083"
+echo ""
+echo "Quick test:"
+echo "  curl -X POST http://localhost:8080/api/v1/notifications/send \\"
+echo "    -H 'Content-Type: application/json' \\"
+echo "    -d '{\"channel\":\"email\",\"content\":\"Hello\",\"recipients\":[\"test@test.com\"]}'"
