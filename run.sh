@@ -34,6 +34,14 @@ sed -i "s|CLUSTER_ID:.*|CLUSTER_ID: '${CLUSTER_ID}'|g" docker-compose.yml
 echo "📦 Starting all services..."
 docker compose up -d
 
+# Ждем готовности всех контейнеров
+echo "⏳ Waiting for containers to start..."
+sleep 30
+
+# Установка зависимостей
+echo "📦 Installing composer dependencies..."
+docker compose exec app composer install --no-dev --optimize-autoloader --no-interaction
+
 # Ждем готовности
 echo "⏳ Waiting for services..."
 until curl -s http://localhost:8083/ &>/dev/null; do sleep 5; done
@@ -46,14 +54,25 @@ echo "✅ App ready"
 echo "🔧 Creating topics..."
 
 create_topic() {
-    docker compose exec -T kafka1 kafka-topics --create \
-        --topic "$1" \
-        --partitions "$2" \
-        --replication-factor "$3" \
-        --config "$4" \
-        ${5:+--config "$5"} \
+    local topic=$1
+    local partitions=$2
+    local replication=$3
+    local config1=$4
+    local config2=$5
+
+    local cmd="docker compose exec -T kafka1 kafka-topics --create \
+        --topic \"$topic\" \
+        --partitions $partitions \
+        --replication-factor $replication \
+        --config \"$config1\" \
         --config compression.type=lz4 \
-        --bootstrap-server kafka1:9092 2>/dev/null && echo "  ✅ $1" || echo "  ⏭️  $1 (exists)" || true
+        --bootstrap-server kafka1:9092"
+
+    if [ -n "$config2" ]; then
+        cmd="$cmd --config \"$config2\""
+    fi
+
+    eval "$cmd 2>/dev/null" && echo "  ✅ $topic" || echo "  ⏭️  $topic (exists)" || true
 }
 
 create_topic "notifications.transactional" 6 3 "min.insync.replicas=2" "retention.ms=2592000000"

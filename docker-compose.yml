@@ -88,7 +88,6 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./.docker/postgres/init-master.sh:/docker-entrypoint-initdb.d/01-init-master.sh
-      - ./.docker/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf
     ports:
       - "5432:5432"
     command: |
