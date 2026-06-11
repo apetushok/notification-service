@@ -42,6 +42,8 @@ sleep 10
 echo "📦 Installing composer dependencies..."
 docker compose exec app composer install --no-dev --optimize-autoloader --no-interaction
 
+docker compose restart app
+
 # Ждем готовности
 echo "⏳ Waiting for services..."
 until curl -s http://localhost:8083/ &>/dev/null; do sleep 5; done
