@@ -1,0 +1,99 @@
+openapi: 3.0.3
+info:
+  title: Notification Service API
+  description: Микросервис массовой рассылки SMS и Email уведомлений
+  version: 1.0.0
+  contact:
+    name: Notification Service Team
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Локальный сервер
+
+paths:
+  /notifications/send:
+    post:
+      tags: [Notifications]
+      summary: Массовая отправка уведомлений
+      operationId: sendNotification
+      parameters:
+        - name: X-Idempotency-Key
+          in: header
+          schema:
+            type: string
+            format: uuid
+          description: Ключ идемпотентности
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [channel, content, recipients]
+              properties:
+                channel:
+                  type: string
+                  enum: [sms, email]
+                priority:
+                  type: string
+                  enum: [transactional, high, normal, low]
+                  default: normal
+                content:
+                  type: string
+                  maxLength: 5000
+                recipients:
+                  type: array
+                  minItems: 1
+                  maxItems: 10000
+                  items:
+                    type: string
+                metadata:
+                  type: object
+      responses:
+        '202':
+          description: Принято
+        '200':
+          description: Идемпотентный повтор
+        '409':
+          description: Конфликт
+        '422':
+          description: Ошибка валидации
+
+  /notifications/recipient/{recipient}:
+    get:
+      tags: [Notification Status]
+      summary: Уведомления получателя
+      parameters:
+        - name: recipient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Список уведомлений
+
+  /notifications/{id}:
+    get:
+      tags: [Notification Status]
+      summary: Детали уведомления
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Детали
+        '404':
+          description: Не найдено
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Проверка здоровья
+      responses:
+        '200':
+          description: OK
