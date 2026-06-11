@@ -2,7 +2,7 @@
 
 set -e
 
-echo "🚀 Deploying Notification Service..."
+echo "🚀 Стартуем Notification Service..."
 
 # Проверка .env
 if [ ! -f .env ]; then
@@ -51,9 +51,9 @@ create_topic() {
         --partitions "$2" \
         --replication-factor "$3" \
         --config "$4" \
-        --config "$5" \
+        ${5:+--config "$5"} \
         --config compression.type=lz4 \
-        --bootstrap-server kafka1:9092 2>/dev/null && echo "  ✅ $1" || echo "  ⏭️  $1 (exists)"
+        --bootstrap-server kafka1:9092 2>/dev/null && echo "  ✅ $1" || echo "  ⏭️  $1 (exists)" || true
 }
 
 create_topic "notifications.transactional" 6 3 "min.insync.replicas=2" "retention.ms=2592000000"
