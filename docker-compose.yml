@@ -261,7 +261,7 @@ services:
       KAFKA_LOG_SEGMENT_BYTES: 1073741824
       KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
       KAFKA_COMPRESSION_TYPE: lz4
-      CLUSTER_ID: 'vpKsUPVER9W4vT6r1oDq9g'
+      CLUSTER_ID: 'rFYq4HkbRryjzqgn4UQ9Jw'
     volumes:
       - kafka1-data:/var/lib/kafka/data
     healthcheck:
@@ -302,7 +302,7 @@ services:
       KAFKA_NUM_PARTITIONS: 12
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_COMPRESSION_TYPE: lz4
-      CLUSTER_ID: 'vpKsUPVER9W4vT6r1oDq9g'
+      CLUSTER_ID: 'rFYq4HkbRryjzqgn4UQ9Jw'
     volumes:
       - kafka2-data:/var/lib/kafka/data
     healthcheck:
@@ -343,7 +343,7 @@ services:
       KAFKA_NUM_PARTITIONS: 12
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_COMPRESSION_TYPE: lz4
-      CLUSTER_ID: 'vpKsUPVER9W4vT6r1oDq9g'
+      CLUSTER_ID: 'rFYq4HkbRryjzqgn4UQ9Jw'
     volumes:
       - kafka3-data:/var/lib/kafka/data
     healthcheck:

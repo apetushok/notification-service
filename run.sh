@@ -42,8 +42,6 @@ sleep 10
 echo "📦 Installing composer dependencies..."
 docker compose exec app composer install --no-dev --optimize-autoloader --no-interaction
 
-docker compose restart app
-
 # Ждем готовности
 echo "⏳ Waiting for services..."
 until curl -s http://localhost:8083/ &>/dev/null; do sleep 5; done
@@ -122,6 +120,8 @@ docker compose exec app chmod -R 755 /var/www/public/docs
 docker compose exec app chmod 644 /var/www/public/docs/index.html
 
 docker compose exec postgres psql -U notify_user -d notifications -c "CREATE DATABASE notifications_test;"
+
+docker compose restart app
 
 echo ""
 echo "✅ Установка завершена!"
