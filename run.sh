@@ -8,8 +8,8 @@ echo "🚀 Deploying Notification Service..."
 if [ ! -f .env ]; then
     echo "❌ .env file not found!"
     cp .env.example .env
-    echo "⚠️  Please edit .env file"
-    exit 1
+#    echo "⚠️  Please edit .env file"
+#    exit 1
 fi
 
 # Генерация ключа

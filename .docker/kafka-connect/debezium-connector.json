@@ -1,0 +1,39 @@
+{
+  "name": "notification-outbox-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "replicator",
+    "database.password": "test",
+    "database.dbname": "notifications",
+    "database.server.name": "notification_service",
+    "topic.prefix": "notification_service",
+
+    "table.include.list": "public.notification_batches",
+
+    "plugin.name": "pgoutput",
+    "publication.name": "dbz_publication",
+    "slot.name": "debezium_slot",
+
+    "snapshot.mode": "always",
+    "snapshot.fetch.size": "1000",
+
+    "poll.interval.ms": "500",
+    "heartbeat.interval.ms": "5000",
+
+    "tombstones.on.delete": "false",
+    "skipped.operations": "u,d,t",
+
+    "transforms": "unwrap",
+    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+    "transforms.unwrap.drop.tombstones": "true",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false",
+
+    "errors.log.enable": "true"
+  }
+}
